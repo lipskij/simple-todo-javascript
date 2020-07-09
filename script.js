@@ -4,8 +4,6 @@ const dateElement = document.getElementById("date");
 const todoList = document.getElementById("list");
 const addBtn = document.querySelector(".fa-plus-circle");
 
-let id = 0;
-
 // event listeners
 addBtn.addEventListener("click", addTodo);
 document.addEventListener("click", checkTodo);
@@ -17,18 +15,21 @@ options = { weekday: "long", month: "long", day: "numeric" };
 const today = new Date();
 dateElement.innerHTML = today.toLocaleDateString("eu-US", options);
 
+const getId = () => Math.floor(Math.random() * 1000);
+
 function addTodo(e) {
   e.preventDefault();
-  id = Math.floor(Math.random() * 1000); //
 
-  renderItem({
+  const newItem = {
     todo: input.value,
     done: false,
-    id,
-  });
+    id: getId(),
+  };
+
+  renderItem(newItem);
 
   // add to local storage
-  addToLocalStorage(input.value); //
+  addToLocalStorage(newItem); //
   // clear input
   input.value = ""; //
 }
@@ -62,7 +63,7 @@ function checkTodo(e) {
 // add items to localstorage
 function addToLocalStorage(todo) {
   let todos = loadFromStorage();
-  todos.push({ todo, done: false, id });
+  todos.push(todo);
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
