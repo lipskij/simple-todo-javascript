@@ -35,7 +35,6 @@ function addTodo(e) {
 }
 
 function checkTodo(e) {
-  /** @type {Array<{ todo: string, done: boolean }>} */
   let todos = loadFromStorage();
   const item = e.target;
   if (item.classList[1] === "fa-check") {
@@ -44,7 +43,6 @@ function checkTodo(e) {
     const todoIndex = todos.findIndex((item) => item.id == todo.id);
     // todos = [{ todo: 'aa', done: true }]
     // todoIndex = 0;
-    /** @type {{ todo: string, done: boolean }} */
     let currentItem = todos[todoIndex]; // { todo: 'aa', done: true }
     todos.splice(todoIndex, 1, {
       todo: todo.textContent,
@@ -107,9 +105,6 @@ function loadFromStorage() {
   return todos;
 }
 
-/**
- * @type {({ todo: string, done: boolean, id: number }) => void}
- */
 function renderItem(todoItem) {
   // create item
   const todo = document.createElement("li");
