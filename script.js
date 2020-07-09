@@ -23,6 +23,7 @@ function addTodo(e) {
   const todo = document.createElement("li");
   todo.classList.add("item");
   todo.innerHTML = input.value;
+  // adding random id
   id = Math.floor(Math.random() * 1000);
   todo.id = id;
   // add complete btn
@@ -42,12 +43,7 @@ function addTodo(e) {
 
 function checkTodo(e) {
   /** @type {Array<{ todo: string, done: boolean }>} */
-  let todos;
-  if (localStorage.getItem("todos") === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem("todos"));
-  }
+  let todos = loadFromStorage();
   const item = e.target;
   if (item.classList[1] === "fa-check") {
     const todo = item.parentElement.parentElement;
@@ -73,24 +69,14 @@ function checkTodo(e) {
 
 // add items to localstorage
 function addToLocalStorage(todo) {
-  let todos;
-  if (localStorage.getItem("todos") === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem("todos"));
-  }
+  let todos = loadFromStorage();
   todos.push({ todo, done: false, id });
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
 // get todos from lockal storage
 function getTodos() {
-  let todos;
-  if (localStorage.getItem("todos") === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem("todos"));
-  }
+  let todos = loadFromStorage();
 
   todos.forEach(function (todoItem) {
     // create item
@@ -120,12 +106,7 @@ function getTodos() {
 }
 
 function removeTodos(todo) {
-  let todos;
-  if (localStorage.getItem("todos") === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem("todos"));
-  }
+  let todos = loadFromStorage();
   const todoIndex = todo.children[0].innerText;
   todos.splice(todos.indexOf(todoIndex), 1);
   localStorage.setItem("todos", JSON.stringify(todos));
@@ -142,4 +123,14 @@ function clearTodo() {
 
 function clearLocalStorage() {
   localStorage.clear();
+}
+
+function loadFromStorage() {
+  let todos;
+  if (localStorage.getItem("todos") === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("todos"));
+  }
+  return todos;
 }
