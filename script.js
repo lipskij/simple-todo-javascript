@@ -4,6 +4,8 @@ const dateElement = document.getElementById("date");
 const todoList = document.getElementById("list");
 const addBtn = document.querySelector(".fa-plus-circle");
 
+let id = 0;
+
 // event listeners
 addBtn.addEventListener("click", addTodo);
 document.addEventListener("click", checkTodo);
@@ -48,18 +50,15 @@ function checkTodo(e) {
   if (item.classList[1] === "fa-check") {
     const todo = item.parentElement.parentElement;
     todo.classList.toggle("lineThrough");
-    // setting an id to separate same li values
-    let id = 0;
-    todo.setAttribute('id', id++);
-    console.log(id)
     const todoIndex = todos.findIndex((item) => item.todo === todo.textContent);
     // todos = [{ todo: 'aa', done: true }]
     // todoIndex = 0;
     /** @type {{ todo: string, done: boolean }} */
-    let currentItem = todos[todoIndex]; // { todo: 'aa', done: true }
+    let currentItem = todos[todoIndex]; // { todo: 'aa', done: true } // sort by id
     todos.splice(todoIndex, 1, {
       todo: todo.textContent,
       done: currentItem.done ? false : true,
+      id: id,
     });
     localStorage.setItem("todos", JSON.stringify(todos));
   }
@@ -78,8 +77,8 @@ function addToLocalStorage(todo) {
   } else {
     todos = JSON.parse(localStorage.getItem("todos"));
   }
-
-  todos.push({ todo, done: false, id: 'id' });
+  id++;
+  todos.push({ todo, done: false, id });
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
