@@ -19,26 +19,18 @@ dateElement.innerHTML = today.toLocaleDateString("eu-US", options);
 
 function addTodo(e) {
   e.preventDefault();
-  // create li in ul
-  const todo = document.createElement("li");
-  todo.classList.add("item");
-  todo.innerHTML = input.value;
-  // adding random id
-  id = Math.floor(Math.random() * 1000);
-  todo.id = id;
-  // add complete btn
-  const doneBtn = document.createElement("div");
-  doneBtn.innerHTML = '<i class="fas fa-check"></i>';
-  todo.appendChild(doneBtn);
-  // add delte btn
-  const deleteBtn = document.createElement("div");
-  deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
-  todo.appendChild(deleteBtn);
-  todoList.appendChild(todo);
+  id = Math.floor(Math.random() * 1000); //
+
+  renderItem({
+    todo: input.value,
+    done: false,
+    id,
+  });
+
   // add to local storage
-  addToLocalStorage(input.value);
+  addToLocalStorage(input.value); //
   // clear input
-  input.value = "";
+  input.value = ""; //
 }
 
 function checkTodo(e) {
@@ -52,7 +44,7 @@ function checkTodo(e) {
     // todos = [{ todo: 'aa', done: true }]
     // todoIndex = 0;
     /** @type {{ todo: string, done: boolean }} */
-    let currentItem = todos[todoIndex]; // { todo: 'aa', done: true } // sort by id
+    let currentItem = todos[todoIndex]; // { todo: 'aa', done: true }
     todos.splice(todoIndex, 1, {
       todo: todo.textContent,
       done: currentItem.done ? false : true,
@@ -80,28 +72,7 @@ function getTodos() {
 
   todos.forEach(function (todoItem) {
     // create item
-    const todo = document.createElement("li");
-
-    // render item according to model
-    if (todoItem.done === true) {
-      todo.classList.add("lineThrough");
-    }
-    todo.classList.add("item");
-    todo.innerHTML = todoItem.todo;
-    todo.id = todoItem.id; 
-
-    // add done btn
-    const doneBtn = document.createElement("div");
-    doneBtn.innerHTML = '<i class="fas fa-check"></i>';
-    todo.appendChild(doneBtn);
-
-    // add delete btn
-    const deleteBtn = document.createElement("div");
-    deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
-    todo.appendChild(deleteBtn);
-
-    // finally add to the container
-    todoList.appendChild(todo);
+    renderItem(todoItem);
   });
 }
 
@@ -133,4 +104,33 @@ function loadFromStorage() {
     todos = JSON.parse(localStorage.getItem("todos"));
   }
   return todos;
+}
+
+/**
+ * @type {({ todo: string, done: boolean, id: number }) => void}
+ */
+function renderItem(todoItem) {
+  // create item
+  const todo = document.createElement("li");
+
+  // render item according to model
+  if (todoItem.done === true) {
+    todo.classList.add("lineThrough");
+  }
+  todo.classList.add("item");
+  todo.innerHTML = todoItem.todo;
+  todo.id = todoItem.id; 
+
+  // add done btn
+  const doneBtn = document.createElement("div");
+  doneBtn.innerHTML = '<i class="fas fa-check"></i>';
+  todo.appendChild(doneBtn);
+
+  // add delete btn
+  const deleteBtn = document.createElement("div");
+  deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
+  todo.appendChild(deleteBtn);
+
+  // finally add to the container
+  todoList.appendChild(todo);
 }
