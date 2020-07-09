@@ -21,11 +21,10 @@ function addTodo(e) {
   e.preventDefault();
   // create li in ul
   const todo = document.createElement("li");
-  todo.innerHTML = input.value;
   todo.classList.add("item");
-  todoList.appendChild(todo);
-  // add to local storage
-  addToLocalStorage(input.value);
+  todo.innerHTML = input.value;
+  id = Math.floor(Math.random() * 1000);
+  todo.id = id;
   // add complete btn
   const doneBtn = document.createElement("div");
   doneBtn.innerHTML = '<i class="fas fa-check"></i>';
@@ -34,6 +33,9 @@ function addTodo(e) {
   const deleteBtn = document.createElement("div");
   deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
   todo.appendChild(deleteBtn);
+  todoList.appendChild(todo);
+  // add to local storage
+  addToLocalStorage(input.value);
   // clear input
   input.value = "";
 }
@@ -50,7 +52,7 @@ function checkTodo(e) {
   if (item.classList[1] === "fa-check") {
     const todo = item.parentElement.parentElement;
     todo.classList.toggle("lineThrough");
-    const todoIndex = todos.findIndex((item) => item.todo === todo.textContent);
+    const todoIndex = todos.findIndex((item) => item.id == todo.id);
     // todos = [{ todo: 'aa', done: true }]
     // todoIndex = 0;
     /** @type {{ todo: string, done: boolean }} */
@@ -58,7 +60,7 @@ function checkTodo(e) {
     todos.splice(todoIndex, 1, {
       todo: todo.textContent,
       done: currentItem.done ? false : true,
-      id: id,
+      id: currentItem.id,
     });
     localStorage.setItem("todos", JSON.stringify(todos));
   }
@@ -77,7 +79,6 @@ function addToLocalStorage(todo) {
   } else {
     todos = JSON.parse(localStorage.getItem("todos"));
   }
-  id++;
   todos.push({ todo, done: false, id });
   localStorage.setItem("todos", JSON.stringify(todos));
 }
@@ -92,22 +93,29 @@ function getTodos() {
   }
 
   todos.forEach(function (todoItem) {
+    // create item
     const todo = document.createElement("li");
+
+    // render item according to model
     if (todoItem.done === true) {
       todo.classList.add("lineThrough");
     }
     todo.classList.add("item");
-    todoList.appendChild(todo);
-    // add li item to screen
     todo.innerHTML = todoItem.todo;
-    // add complete btn
+    todo.id = todoItem.id; 
+
+    // add done btn
     const doneBtn = document.createElement("div");
     doneBtn.innerHTML = '<i class="fas fa-check"></i>';
     todo.appendChild(doneBtn);
-    // add delte btn
+
+    // add delete btn
     const deleteBtn = document.createElement("div");
     deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
     todo.appendChild(deleteBtn);
+
+    // finally add to the container
+    todoList.appendChild(todo);
   });
 }
 
